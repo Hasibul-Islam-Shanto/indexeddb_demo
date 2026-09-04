@@ -2,6 +2,16 @@ import { DB_NAME, DB_VERSION, STORE } from './constants'
 import type { CategoryId, Expense } from '../types'
 
 let dbPromise: Promise<IDBDatabase> | null = null
+let cachedDb: IDBDatabase | null = null
+
+/** Clears the cached DB connection (used by tests). */
+export function resetDbCache(): void {
+  if (cachedDb) {
+    cachedDb.close()
+    cachedDb = null
+  }
+  dbPromise = null
+}
 
 const getDb = (): Promise<IDBDatabase> => {
   if (dbPromise) return dbPromise
@@ -19,7 +29,10 @@ const getDb = (): Promise<IDBDatabase> => {
       }
     }
 
-    request.onsuccess = () => resolve(request.result)
+    request.onsuccess = () => {
+      cachedDb = request.result
+      resolve(request.result)
+    }
     request.onerror = () => reject(request.error)
   })
 
