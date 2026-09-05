@@ -1,6 +1,6 @@
 services:
   web:
-    build: shanto78/ledger
+    image: shanto78/ledger:latest
     ports:
       - "3000:80"
     restart: unless-stopped
