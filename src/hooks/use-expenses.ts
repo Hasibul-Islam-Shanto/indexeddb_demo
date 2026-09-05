@@ -7,6 +7,7 @@ import {
   updateExpense as updateExpenseInDb,
 } from '../db/expense-indexed-db'
 import type { CategoryId, Expense } from '../types'
+import { createId } from '../lib/id'
 
 function parseAmountSearch(value: string): number | undefined {
   const trimmed = value.trim()
@@ -62,7 +63,7 @@ export function useExpenses() {
 
   const addExpense = useCallback(
     async (data: Omit<Expense, 'id'>) => {
-      await addExpenseToDb({ ...data, id: crypto.randomUUID() })
+      await addExpenseToDb({ ...data, id: createId() })
       await refresh()
     },
     [refresh],

@@ -1,13 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { useExpenses } from './use-expenses'
-
-beforeEach(() => {
-  let id = 0
-  vi.stubGlobal('crypto', {
-    randomUUID: () => `generated-id-${++id}`,
-  })
-})
 
 describe('useExpenses', () => {
   it('loads expenses on mount', async () => {
@@ -41,10 +34,10 @@ describe('useExpenses', () => {
 
     expect(result.current.expenses).toHaveLength(1)
     expect(result.current.expenses[0]).toMatchObject({
-      id: 'generated-id-1',
       description: 'Coffee',
       amount: 5.5,
     })
+    expect(result.current.expenses[0].id).toBeTruthy()
     expect(result.current.filtered).toHaveLength(1)
   })
 
