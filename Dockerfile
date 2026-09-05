@@ -4,8 +4,7 @@ WORKDIR /app
 
 COPY package*.json tsconfig*.json vite.config.ts ./
 
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci
+RUN npm ci
 
 COPY . .
 
