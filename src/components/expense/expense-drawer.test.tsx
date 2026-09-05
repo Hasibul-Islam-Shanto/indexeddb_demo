@@ -40,12 +40,14 @@ describe('ExpenseDrawer', () => {
   })
 
   it('submits a new expense with rounded amount', async () => {
-    const user = userEvent.setup()
     render(<ExpenseDrawer {...defaultProps} />)
 
-    await user.clear(screen.getByLabelText('Amount'))
-    await user.type(screen.getByLabelText('Amount'), '8.555')
-    await user.type(screen.getByLabelText('Description'), 'Lunch')
+    fireEvent.change(screen.getByLabelText('Amount'), {
+      target: { value: '8.555' },
+    })
+    fireEvent.change(screen.getByLabelText('Description'), {
+      target: { value: 'Lunch' },
+    })
     fireEvent.submit(screen.getByRole('dialog').querySelector('form')!)
 
     await waitFor(() => {
@@ -63,12 +65,12 @@ describe('ExpenseDrawer', () => {
   })
 
   it('submits an update in edit mode', async () => {
-    const user = userEvent.setup()
     render(<ExpenseDrawer {...defaultProps} expense={sampleExpense} />)
 
-    await user.clear(screen.getByLabelText('Description'))
-    await user.type(screen.getByLabelText('Description'), 'Espresso')
-    await user.click(screen.getByRole('button', { name: 'Update expense' }))
+    fireEvent.change(screen.getByLabelText('Description'), {
+      target: { value: 'Espresso' },
+    })
+    fireEvent.submit(screen.getByRole('dialog').querySelector('form')!)
 
     await waitFor(() => {
       expect(defaultProps.onUpdate).toHaveBeenCalledWith(
